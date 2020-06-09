@@ -18,3 +18,4 @@ let authURL = `${URL}?${QueryString}`;
 let link = document.getElementById('oauth');
 link.setAttribute('href', authURL);
 console.log('authURL: ', authURL);
+
