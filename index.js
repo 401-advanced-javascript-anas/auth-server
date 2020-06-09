@@ -14,6 +14,6 @@ const mongooseOptions = {
   useFindAndModify: false,
 };
 
-mongoose.connect(MONGODB_URI, mongooseOptions);
+mongoose.connect(process.env.MONGODB_URI || MONGODB_URI, mongooseOptions);
 
 server.start();
