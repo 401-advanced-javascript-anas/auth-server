@@ -15,7 +15,7 @@ module.exports = (capability)=> {
       if (req.user.capabilities.includes(capability)) {
         next();
       } else {
-        next('Access Denied');
+        next('Access Denied', res.send('Access Denied'));
       }
     } catch(e) {
       // report an error

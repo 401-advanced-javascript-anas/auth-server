@@ -27,8 +27,11 @@ module.exports = (req, res, next) => {
   console.log(user);
   console.log(pass);
 
-  users.authenticateBasic(user, pass).then(validUser => {
-    req.token = users.generateToken(validUser);
+  users.authenticateBasic(user, pass).then( async validUser => {
+    console.log('jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj',validUser);
+    
+    req.token = await users.generateTokenIn(validUser);
+    
     next();
   })
     .catch(err => next('Invalid Login!!'));

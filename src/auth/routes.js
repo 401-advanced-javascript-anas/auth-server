@@ -38,6 +38,7 @@ function sign_up(req, res, next) { //sign up route if we have the user, return f
 
 // check this username if the password submitted matches the encrypted one we have saved in our db
 function sign_in(req, res, next) {
+  
   res.cookie(req.token);
   res.status(200).send(req.token); 
 }
