@@ -1,7 +1,5 @@
 'use strict';
 
-
-
 const users = require('../../models/users');
 const superagent = require('superagent');
 // add them in ur .env
@@ -82,7 +80,3 @@ async function getUser(remoteUser) {
 }
 
 
-
-
-
-// 

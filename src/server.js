@@ -7,8 +7,9 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
-// const users = require('./models/users');
-// const basicAuth = require('./auth/middleware/basic');
+
+
+const extraRoutes = require('./extra-routes');
 const router = require('./auth/routes');
 
 
@@ -18,7 +19,7 @@ app.use(cors());
 app.use(morgan('dev'));
 
 
-
+app.use(extraRoutes);
 app.use(router);
 
 

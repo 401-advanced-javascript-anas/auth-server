@@ -1,31 +1,12 @@
 'use strict';
 
-const userSchema = require('./users-schama');
+const Model = require('./model');
+const schema = require('./users-schama');
 
-class Users {
-  constructor(userSchema) {
-    this.schama = userSchema;
-  }
-  async read(record) {
-
-    if (record) {
-      console.log('if herererer');
-        
-
-      let senc = await userSchema.find({ username : record });
-
-      return senc;
-
-    } else {
-      console.log('else herererer');
-        
-      return await userSchema.find({});
-    }
-  }
-  async create(record) {
-    let newUser = new userSchema(record);
-    return await newUser.save(record);
+class users extends Model {
+  constructor(schema) {
+    super(schema);
   }
 }
 
-module.exports = new Users();
+module.exports = new users(schema);

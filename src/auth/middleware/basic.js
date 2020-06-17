@@ -4,77 +4,37 @@ const users = require('../../models/users');
 const base64 = require('base-64');
 
 module.exports = (req, res, next) => {
-  
+  // check username and password if we have them sent in the request
+  // req : params body qs headers
+  // req.headers.authorization, encoded username and password
   if (!req.headers.authorization) {
+    console.log(req.headers.authorization);
     next('invalid Login');
     return;
   }
-  
+
+
+  //  headers value : 
+  // authorization(key name) : Basic dGVzdEB0ZXN0LmNvbTp0ZXN0MTIz (value)
+  // Pull out this encoded part and split the header value
   console.log('req.headers.authorization >>>> ',req.headers.authorization);
   let basic = req.headers.authorization.split(' ').pop();
+  console.log(basic);
 
+  // decode to user:pass
+  let [user, pass] = base64.decode(basic).split(':'); // [user, pass];
   
-  let [user, pass] = base64.decode(basic).split(':'); 
-
   console.log(user);
   console.log(pass);
-  
-  
+
+  users.authenticateBasic(user, pass).then( async validUser => {
+    console.log('jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj',validUser);
     
-  users.authenticateBasic(user, pass).then(validUser => {
-    req.token = users.generateToken(validUser);
+    req.token = await users.generateTokenIn(validUser);
+    
     next();
   })
     .catch(err => next('Invalid Login!!'));
 
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const base64 = require('base-64');
-// const users = require('../../models/users-model');
-
-// module.exports = (req, res, next) => {
-//   if (!req.headers.authorization) {
-    
-//     next('Invalid Login');
-//   } else {
-    
-//     const basic = req.headers.authorization.split(' ').pop();
-
-//     const [user, pass] = base64.decode(basic).split(':');
-    
-//     users.authenticateBasic(user, pass)
-//       .then(validator => {
-//         req.token = users.getToken(validator);
-       
-//         next();
-//       }).catch(err => {
-//         next(err.message);
-//       });
-//   }
-// };
