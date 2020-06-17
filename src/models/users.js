@@ -58,12 +58,12 @@ users.generateToken = function (user) {
     {
       username: user.username,
       capabilities: roles[user.role],
-    }, SECRET, {expiresIn: '365d'} );
+      expiresIn:900,
+    }, SECRET );
 
   return token;
 };
 
-// *******************************************\\
 
 // *****************************************************\\
 
@@ -80,6 +80,7 @@ users.generateTokenIn = async function (user) {
     {
       username: user,
       capabilities: roles[modelRead[0].role],
+      expiresIn:900,
     }, SECRET );
 
   console.log(token);
@@ -88,15 +89,6 @@ users.generateTokenIn = async function (user) {
 };
 
 // *******************************************\\
-
-
-
-
-
-
-
-
-
 
 users.list = async function(record){
   let modelRead = await db.read(record);
