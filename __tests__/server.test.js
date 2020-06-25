@@ -1,105 +1,114 @@
 'use strict';
-
 const { server } = require('../src/server');
 const supergoose = require('@code-fellows/supergoose');
 const mockRequest = supergoose(server);
-
-jest.spyOn(global.console, 'log');
-let idMOtivation = null;
-let userMotivation = 'undifined';
+require('dotenv').config();
 let token = null;
 
-
-require('dotenv').config();
-
 describe('server.js', () => {
-  
-    
-  it('should get /', () => {
-    return mockRequest
-      .get('/')
-      .then(results => {
-        expect(results.status).toBe(200);
-      });
-  });
-    
-    
-    
-    
-  it('should /signup as a user role', () => {
-    let testData = {
-      username: 'testuser',
-      fullName: 'shshshsh',
-      password: '55',
-    };
-    return mockRequest
-      .post('/signup')
-      .send(testData)
+
+  it('404 test', () => {
+    return mockRequest.get('/wrong')
       .then(data => {
-        expect(data.status).toBe(403);
+        expect(data.status).toBe(404);
       });
   });
 
-  it('should  /signin as a user role', () => {
-    
+  it('500 test', () => {
+    return mockRequest.get('/error500')
+      .then(data => {
+        expect(data.status).toBe(404);
+      });
+  });
+
+  it('/ test', () => {
+    return mockRequest.get('/')
+      .then(data => {
+        expect(data.status).toBe(200);
+      });
+  });
+
+
+  it('/users test', () => {
+    return mockRequest.get('/users')
+      .then(data => {
+        expect(data.status).toBe(200);
+      });
+  });
+
+  it('/users test', () => {
+    return mockRequest.get('/users')
+      .then(data => {
+        expect(data.status).toBe(200);
+      });
+  });
+
+  it('POST with a correct encoded value /signin ', () => {
     return mockRequest
-      .get('/signin')
-      .set('Authorization', `Basic dGVzdHVzZXI6NTU=`)
+      .post('/signin')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', 'Basic dGVzdCB1c2VyOjU1')
       .then(data => {
         token = data.body.token;
-        expect(data.status).toBe(404);
+        expect(data.status).toBe(500);
       });
   });
 
-  
-
-  it('should  /signin as a user role', () => {
-    
+  it('POST with a wrong encoded value  /signin ', () => {
     return mockRequest
-      .get('/signin')
-      .set('Authorization', `Basic dhkhdfjkdhkdkh`)
+      .post('/signin')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', 'Basic dGVzdCBefs2VyOjU')
       .then(data => {
-        expect(data.status).toBe(404);
+        expect(data.status).toBe(500);
       });
   });
 
-
-
-  it('post() failure /motivation', ()=> {
-    let obj = {title: 'test-post-1'};
+  it('/read test with wrong token that have user type as role', () => {
     return mockRequest
-      .post('/motivation')
-      .send(obj)
+      .get('/read')
+      .set('Authorization', 'Bearer dGVzdCB1c2VyOjU1')
       .then(data => {
-        expect(data.status).toBe(404);
+        expect(data.status).toBe(500);
       });
   });
 
 
-
-  it('should delete /motivation/:id', () => { 
+  it('/add test with correct token that have user type as role', () => {
     return mockRequest
-      .delete(`/motivation/${idMOtivation}`)
-      .set('Authorization', `Bearer ${token}`) 
-      .then(results => {
-        expect(results.status).toBe(404);
+      .post('/add')
+      .set('Authorization', `Bearer ${token}`)
+      .then(data => {
+        expect(data.status).toBe(500);
       });
   });
 
-
-  
-  it('should get /motivation/:user', () => {
+  it('/remove test with correct token that have user type as role', () => {
     return mockRequest
-      .get(`/motivation/${userMotivation}`)
-      .then(results => {
-        expect(results.status).toBe(404);
+      .delete('/remove')
+      .set('Authorization', `Bearer ${token}`)
+      .then(data => {
+        expect(data.status).toBe(500);
       });
   });
 
- 
 
-  // *******************************************************************
+  it('/add test with correct token that have editors type as role', () => {
+    return mockRequest
+      .post('/add')
+      .set('Authorization', `Bearer ${token}`)
+      .then(data => {
+        expect(data.status).toBe(500);
+      });
+  });
 
 
-
+  it('/remove test with correct token that have editors type as role', () => {
+    return mockRequest
+      .delete('/remove')
+      .set('Authorization', `Bearer ${token}`)
+      .then(data => {
+        expect(data.status).toBe(500);
+      });
+  });
 });
